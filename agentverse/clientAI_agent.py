@@ -34,17 +34,10 @@ SERVER_AGENT_ADDRESS = os.getenv('SERVER_AGENT_ADDRESS')
 app = Flask(__name__)
 CORS(app)
 
-# Cargar variables de entorno
-
-
-# Inicializar cola para respuestas
 response_queue = queue.Queue()
 
-# Identidad del agente cliente
 client_identity = None
 
-
-# Registro en AgentVerse
 def init_client():
     global client_identity
     
@@ -101,8 +94,8 @@ def chat():
             {"query": query}
         )
 
-        # Esperar respuesta (máx. 10 segundos)
-        for _ in range(20):  # espera activa por 10 segundos (20 * 0.5s)
+        
+        for _ in range(20):  
             try:
                 response = response_queue.get_nowait()
                 return jsonify({"response": response})

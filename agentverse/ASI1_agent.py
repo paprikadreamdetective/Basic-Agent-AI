@@ -8,28 +8,25 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# Configurar logs
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Cargar variables de entorno
-load_dotenv()
 
-# Claves y tokens
+load_dotenv()
 
 ASI1_API_KEY = os.getenv('ASI1_API_KEY')
 AGENT_SECRET_KEY = os.getenv('AGENT_SECRET_KEY_1')
 
 AGENTVERSE_API_KEY = str(os.getenv('AGENTVERSE_API_KEY'))
 print("agent verse key: ")
-# Flask app
+
 app = Flask(__name__)
 CORS(app)
 
-# Identidad del agente
+
 client_identity = None
 
-# API de ASI1
 def get_asi1_response(query: str) -> str:
     
     api_key = ASI1_API_KEY
@@ -56,18 +53,17 @@ def get_asi1_response(query: str) -> str:
             if "choices" in result and len(result["choices"]) > 0:
                 return result["choices"][0]["message"]["content"].strip()
             else:
-                return "La API de ASI1 devolvió una respuesta vacía."
+                return "La API de ASI1 devolvio una respuesta vacia."
         else:
             return f"Error de ASI1 API: {response.status_code}, {response.text}"
     except Exception as e:
         return f"Error al conectar con la API de ASI1: {str(e)}"
 
-# Inicializa y registra el agente en AgentVerse
 def init_client():
     global client_identity
     try:
         client_identity = Identity.from_seed(AGENT_SECRET_KEY, 0)
-        logger.info(f"Agente iniciado con dirección: {client_identity.address}")
+        logger.info(f"Agente iniciado en: {client_identity.address}")
 
         readme = """
         ![domain:routes](https://img.shields.io/badge/route-assistant-blue)
@@ -98,7 +94,7 @@ def init_client():
 
         logger.info("Registro del agente en AgentVerse completado.")
     except Exception as e:
-        logger.error(f"Error al inicializar agente: {e}")
+        logger.error(f"Error al iniciar agente: {e}")
         raise
 
 # Endpoint que recibe mensajes de otros agentes
